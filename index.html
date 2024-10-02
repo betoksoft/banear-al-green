@@ -30,8 +30,14 @@
     <script>
         function updateCountdown() {
             const now = new Date();
-            const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-            const remainingTime = midnight - now;
+            const targetDate = new Date(2024, 9, 1, 0, 0, 0); // October 1, 2024 at midnight
+            const remainingTime = targetDate - now;
+
+            if (remainingTime < 0) {
+                clearInterval(interval);
+                document.getElementById('countdown').textContent = "¡Hora de banear al HP!";
+                return;
+            }
 
             const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
@@ -41,11 +47,6 @@
                 String(hours).padStart(2, '0') + ":" +
                 String(minutes).padStart(2, '0') + ":" +
                 String(seconds).padStart(2, '0');
-
-            if (remainingTime < 0) {
-                clearInterval(interval);
-                document.getElementById('countdown').textContent = "¡Hora de banear al HP!";
-            }
         }
 
         const interval = setInterval(updateCountdown, 1000);
