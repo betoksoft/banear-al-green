@@ -19,12 +19,21 @@
             font-size: 48px;
             margin-top: 20px;
         }
+        #image {
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 20px;
+            max-width: 100%; /* Responsive image */
+            height: auto; /* Maintain aspect ratio */
+            display: none; /* Initially hide the image */
+        }
     </style>
 </head>
 <body>
     <div>
         <h1>Cuenta regresiva para banear al Green</h1>
         <div id="countdown">00:00:00</div>
+        <img id="image" src="greenog.jpeg" alt="Description of image">
     </div>
 
     <script>
@@ -36,6 +45,7 @@
             if (remainingTime < 0) {
                 clearInterval(interval);
                 document.getElementById('countdown').textContent = "¡Hora de banear al HP!";
+                document.getElementById('image').style.display = "block";
                 return;
             }
 
