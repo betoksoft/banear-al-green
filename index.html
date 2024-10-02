@@ -31,36 +31,73 @@
 </head>
 <body>
     <div>
-        <h1>Cuenta regresiva para banear al Green</h1>
-        <div id="countdown">00:00:00</div>
+        <h2 id="title"></h2>
+        <h1 id="countdown"></h1>
+        <h1 id="message"></h1>
         <img id="image" src="greenog.jpeg" alt="Description of image">
     </div>
 
     <script>
-        function updateCountdown() {
-            const now = new Date();
-            const targetDate = new Date(2024, 9, 1, 0, 0, 0); // October 1, 2024 at midnight
-            const remainingTime = targetDate - now;
+        const countdown = (() => {
+            const title1 = "Cuenta regresiva para banear al Green"
+            const title2 = "Tiempo de ban"
+            const countdownElement = document.getElementById("countdown")
+            const messageElement = document.getElementById("message")
+            const titleElement = document.getElementById("title")
+            const imageElement = document.getElementById("image")
+            let countdownInterval = null
+            let targetDate = null
+            let nextDateMessage = null
 
-            if (remainingTime < 0) {
-                clearInterval(interval);
-                document.getElementById('countdown').textContent = "¡Hora de banear al HP!";
-                document.getElementById('image').style.display = "block";
-                return;
+            const onTick = () => {
+                const distance = targetDate - new Date().getTime()
+
+                const hours = Math.floor(distance / 36e5)
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000)
+
+                countdownElement.innerHTML = hours +
+                    ":" + String(minutes).padStart(2, "0") +
+                    ":" + String(seconds).padStart(2, "0")
+
+                if (distance >= 0) return
+
+                stopCountdown()
+                messageElement.innerHTML = "¡Hora de banear al HP!"
+                titleElement.innerHTML = title2
+                imageElement.style.display = "block"
+
+                if (nextDateMessage) {
+                    startCountdown(nextDateMessage, null)
+                    return
+                }
+                
+                titleElement.innerHTML = title1
             }
 
-            const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+            const startCountdown = (_targetDate, _nextDateMessage) => {
+                targetDate = _targetDate
+                nextDateMessage = _nextDateMessage
+                countdownInterval = setInterval(onTick, 1000)
+            }
 
-            document.getElementById('countdown').textContent =
-                String(hours).padStart(2, '0') + ":" +
-                String(minutes).padStart(2, '0') + ":" +
-                String(seconds).padStart(2, '0');
-        }
+            const stopCountdown = () => {
+                clearInterval(countdownInterval)
+                countdownInterval = null
+                countdownElement.innerHTML = ""
+            }
 
-        const interval = setInterval(updateCountdown, 1000);
-        updateCountdown();
+            titleElement.innerHTML = title1
+            return {
+                startCountdown: startCountdown
+            }
+        })();
+
+        const october3rd = new Date("October 2, 2024 00:00:00").getTime()
+        const october4th = new Date("October 5, 2024 00:00:00").getTime()
+
+        countdown.startCountdown(october3rd, october4th);
+    </script>
     </script>
 </body>
 </html>
